@@ -1,6 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://encoded-one-api.onrender.com', // optional, for server-to-server
+  'https://encoded-one.vercel.app',       // later, when you deploy frontend
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow requests with no origin (mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  })
+);
+
 const dotenv = require('dotenv');
 
 dotenv.config();
